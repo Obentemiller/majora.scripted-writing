@@ -1,4 +1,4 @@
-# Majorama.redação
+# Majorama.redação-scriptada
 
 Interface que ensina a estrutura fixa da redação dissertativo-argumentativa: o usuário escreve etapa por etapa (marcadores automáticos `@R1I@ … @R1F@`) e o app gera um prompt estruturado (algoritmo + redação em blocos + o que se espera de cada bloco) para correção em qualquer LLM.
 
