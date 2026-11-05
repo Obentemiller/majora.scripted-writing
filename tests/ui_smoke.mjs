@@ -6,9 +6,11 @@ const dom=new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:'h
 const d=dom.window.document,w=dom.window;
 const ok=(c,m)=>{if(!c){console.error('FALHA:',m);process.exitCode=1;}else console.log('ok:',m);};
 const ctrlEnter=t=>t.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Enter',ctrlKey:true,bubbles:true}));
-const escreve=(v)=>{const b=d.querySelector('.blk:focus')||[...d.querySelectorAll('.blk')].pop();b.focus();b.textContent=v;b.dispatchEvent(new w.Event('input'));ctrlEnter(b);};
+const escreve=(v)=>{const b=d.querySelector('#texto .blk:focus')||[...d.querySelectorAll('#texto .blk')].pop();b.focus();b.textContent=v;b.dispatchEvent(new w.Event('input'));ctrlEnter(b);};
 
-ok(!d.getElementById('form-projeto').hidden&&d.getElementById('texto').hidden,'começa na etapa 1 (projeto), texto bloqueado');
+ok(!d.getElementById('manual-view').hidden,'1ª visita abre o manual');
+d.querySelector('.m-fechar').click();
+ok(!d.getElementById('form-projeto').hidden&&d.getElementById('texto').hidden,'fechar o manual leva à etapa 1 (projeto), texto bloqueado');
 ok(d.getElementById('proj-pane').hidden,'painel do projeto oculto antes de concluir');
 const campos=[...d.querySelectorAll('.fp-ta')];
 ok(campos.length===7,'7 campos do projeto');
@@ -17,18 +19,19 @@ ok(d.getElementById('status-msg').className==='warn','campo vazio não avança')
 campos.forEach((c,i)=>{c.value='valor '+i;c.dispatchEvent(new w.Event('input'));ctrlEnter(c);});
 ok(d.getElementById('form-projeto').hidden&&!d.getElementById('texto').hidden,'concluir projeto libera o texto');
 ok(!d.getElementById('proj-pane').hidden&&d.getElementById('proj-corpo').textContent.includes('valor 3'),'painel do projeto exibe o que foi construído');
-ok(d.querySelectorAll('.blk').length===1,'um bloco ativo no texto contínuo');
+ok(d.querySelectorAll('#texto .blk').length===1,'um bloco ativo no texto contínuo');
 escreve('Repertório um.');
-ok(d.querySelectorAll('.blk').length===2&&d.querySelectorAll('.blk')[1].classList.contains('k'),'conectivo é a etapa seguinte');
+ok(d.querySelectorAll('#texto .blk').length===2&&d.querySelectorAll('#texto .blk')[1].classList.contains('k'),'conectivo é a etapa seguinte');
 ok(d.getElementById('console-output').textContent.includes('Nesse sentido'),'guia sugere o melhor conectivo');
 ok(d.querySelector('.pi.rel'),'item do projeto destacado como norte');
 for(let i=2;i<=23;i++)escreve('Texto '+i+'.');
-ok(d.querySelectorAll('.blk').length===23&&d.querySelector('.fim'),'23 blocos e aviso de fim');
+ok(d.querySelectorAll('#texto .blk').length===23&&d.querySelector('.fim'),'23 blocos e aviso de fim');
 const b0=d.querySelector('.blk');b0.focus();
 ok(d.querySelector('#editor-opts .atual').textContent.includes('Repertório'),'foco no bloco muda a etapa destacada');
 b0.textContent='Repertório novo.';b0.dispatchEvent(new w.Event('input'));
 d.getElementById('promptBtn').click();
 const p=d.getElementById('prompt-out').value;
+ok(!p.includes('EXCLUSIVAMENTE')&&p.includes('direitos humanos')&&p.includes('VERIFICAR'),'prompt: regras anti-viés (camadas A/B, direitos humanos, verificar)');
 ok(p.includes('@R1I@\nRepertório novo.\n@R1F@')&&p.includes('@K11F@')&&p.includes('LEPER PRO')&&p.includes('Esperado:')&&p.includes('valor 3')&&p.includes('Texto corrido'),'prompt com projeto, marcadores, algoritmo e esperado');
 d.getElementById('projBtn').click();
 ok(d.getElementById('proj-pane').hidden,'painel do projeto oculta');

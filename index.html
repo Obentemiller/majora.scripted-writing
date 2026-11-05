@@ -18,6 +18,7 @@
 
     <div id="controls">
       <button id="acaoBtn" title="Concluir a etapa atual (Ctrl+Enter)"><span class="ic">✓</span><span class="txt">Concluir</span></button>
+      <button id="manualBtn" aria-pressed="false" title="Manual: o algoritmo, os pontos fracos e a correção"><span class="ic">≡</span><span class="txt">Manual</span></button>
       <button id="projBtn" aria-pressed="true" title="Mostrar/ocultar o projeto de texto"><span class="ic">◧</span><span class="txt">Projeto</span></button>
       <button id="promptBtn" title="Ver e copiar o prompt de correção"><span class="ic">❯</span><span class="txt">Prompt</span></button>
       <button id="bY" aria-pressed="true" title="Abrir/fechar o painel lateral"><span class="ic">▤</span><span class="txt">Painel</span></button>
@@ -33,14 +34,17 @@
           <div id="proj-corpo"></div>
         </aside>
         <div id="palco">
+          <div id="manual-view" hidden></div>
           <div id="texto" hidden></div>
           <div id="form-projeto" hidden></div>
           <div id="prompt-view" hidden>
             <div id="prompt-bar">
               <button id="voltarBtn">← Voltar</button>
               <button id="copiarBtn">Copiar prompt</button>
+              <button id="contraBtn" title="Segundo prompt: manda o LLM contestar a própria nota">Copiar contra-prova</button>
               <button id="limparBtn" class="perigo" title="Apaga a redação e o projeto salvos neste navegador">Apagar tudo</button>
             </div>
+            <div id="prompt-info"></div>
             <textarea id="prompt-out" readonly spellcheck="false" aria-label="Prompt gerado"></textarea>
           </div>
         </div>
@@ -89,6 +93,7 @@
 
   <script src="vendor/majorama-ui/majorama-ui.js"></script>
   <script src="etapas.js"></script>
+  <script src="manual-dados.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
