@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Majorama.redação — planeje e escreva a redação etapa por etapa</title>
-<meta name="description" content="Planeje, escreva a redação dissertativo-argumentativa como um texto direto com etapas grifadas e gere um prompt estruturado para qualquer LLM corrigir." />
+<title>Majorama.redação — escreva a redação etapa por etapa</title>
+<meta name="description" content="Escreva a redação dissertativo-argumentativa seguindo uma estrutura fixa, bloco por bloco, e gere um prompt estruturado para qualquer LLM corrigir." />
 <link rel="stylesheet" href="vendor/majorama-ui/majorama-ui.css" />
 <link rel="stylesheet" href="app.css" />
 </head>
@@ -18,8 +18,8 @@
 
     <div id="controls">
       <button id="acaoBtn" title="Concluir a etapa atual (Ctrl+Enter)"><span class="ic">✓</span><span class="txt">Concluir</span></button>
-      <button id="promptBtn" aria-pressed="false" aria-controls="prompt-view" title="Ver e copiar o prompt de correção"><span class="ic">❯</span><span class="txt">Prompt</span></button>
-      <button id="planoBtn" aria-pressed="false" aria-controls="plano-view" title="Abrir o plano da redação"><span class="ic">▦</span><span class="txt">Plano</span></button>
+      <button id="projBtn" aria-pressed="true" title="Mostrar/ocultar o projeto de texto"><span class="ic">◧</span><span class="txt">Projeto</span></button>
+      <button id="promptBtn" title="Ver e copiar o prompt de correção"><span class="ic">❯</span><span class="txt">Prompt</span></button>
       <button id="bY" aria-pressed="true" title="Abrir/fechar o painel lateral"><span class="ic">▤</span><span class="txt">Painel</span></button>
       <button id="helpBtn" title="Tutorial guiado"><span class="ic">?</span><span class="txt">Ajuda</span></button>
     </div>
@@ -28,50 +28,39 @@
   <main id="workspace">
     <section id="terminal-pane" aria-label="Texto da redação">
       <div id="terminal-container">
-        <div id="texto"></div>
-        <section id="plano-view" hidden aria-label="Plano da redação">
-          <div id="plano-form">
-            <h2>Etapa 1 · Plano da redação</h2>
-            <p id="plano-intro"></p>
-            <div id="plano-campos"></div>
-            <div id="plano-acoes">
-              <button id="planoConcluir">Concluir plano e começar a redação</button>
-              <button id="planoVoltar" hidden>Voltar ao texto</button>
+        <aside id="proj-pane" aria-label="Projeto de texto" hidden>
+          <div id="proj-cab"><span>projeto de texto</span><span class="acoes"><button id="editProj" title="Editar o projeto de texto">editar</button><button id="closeProj" aria-label="Ocultar o projeto" title="Ocultar">✕</button></span></div>
+          <div id="proj-corpo"></div>
+        </aside>
+        <div id="palco">
+          <div id="texto" hidden></div>
+          <div id="form-projeto" hidden></div>
+          <div id="prompt-view" hidden>
+            <div id="prompt-bar">
+              <button id="voltarBtn">← Voltar</button>
+              <button id="copiarBtn">Copiar prompt</button>
+              <button id="limparBtn" class="perigo" title="Apaga a redação e o projeto salvos neste navegador">Apagar tudo</button>
             </div>
+            <textarea id="prompt-out" readonly spellcheck="false" aria-label="Prompt gerado"></textarea>
           </div>
-        </section>
-        <div id="prompt-view" hidden>
-          <div id="prompt-bar">
-            <button id="voltarBtn">← Voltar ao texto</button>
-            <button id="copiarBtn">Copiar prompt</button>
-            <button id="limparBtn" class="perigo" title="Apaga a redação salva neste navegador">Apagar redação</button>
-          </div>
-          <textarea id="prompt-out" readonly spellcheck="false" aria-label="Prompt gerado"></textarea>
         </div>
       </div>
-      <div id="status-bar"><span id="status-msg" role="status" aria-live="polite">Pronto.</span><span id="engine-mode">Majorama.redação</span></div>
+      <div id="status-bar"><span id="status-msg">Pronto.</span><span id="engine-mode">Majorama.redação</span></div>
     </section>
 
     <div id="splitter" role="separator" aria-orientation="vertical" aria-label="Redimensionar o painel lateral" tabindex="0"></div>
 
-    <aside id="editor-pane" aria-label="Plano, estrutura e guia da etapa">
+    <aside id="editor-pane" aria-label="Estrutura e guia da etapa">
       <div id="editor-header">
-        <span>painel</span>
+        <span>estrutura</span>
         <span class="acoes">
           <button id="maxEditor" title="Maximizar/restaurar" aria-label="Maximizar" aria-pressed="false">⤢</button>
           <button id="closeEditor" title="Fechar o painel" aria-label="Fechar o painel">✕</button>
         </span>
       </div>
-      <section id="plano-resumo" aria-label="Plano da redação">
-        <div id="plano-resumo-head">
-          <span>plano · etapa 1</span>
-          <button id="togglePlano" aria-expanded="true" aria-controls="plano-resumo-corpo" title="Recolher/expandir o plano">▾</button>
-        </div>
-        <div id="plano-resumo-corpo"></div>
-      </section>
-      <div id="editor-opts" aria-label="Estrutura da redação"></div>
+      <div id="editor-opts"></div>
       <div id="console-header">guia da etapa</div>
-      <div id="console-output" role="log" aria-live="polite" aria-label="Guia da etapa"></div>
+      <div id="console-output" role="log" aria-live="polite"></div>
     </aside>
   </main>
 
