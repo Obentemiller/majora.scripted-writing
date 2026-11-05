@@ -1,48 +1,91 @@
 /* Regras específicas do Majorama.redação. O visual geral vem de vendor/majorama-ui/majorama-ui.css. */
 #terminal-container{overflow:auto;overscroll-behavior:contain;}
-#texto{max-width:78ch;margin:0 auto;padding:18px 18px 40vh;}
-.par{margin:0 0 22px;}
-.par-t{margin:0 0 6px;font-size:12px;font-weight:400;color:var(--fg-dim);}
-.par-corpo{font-size:15px;line-height:1.85;}
 
-/* blocos concluídos: lidos em sequência, um por etapa, cada qual com sua cor */
-.blk{display:inline;margin:0;padding:1px 2px;border:0;border-bottom:2px solid var(--c);border-radius:2px;
-  background:var(--cb);color:var(--fg);font:inherit;text-align:left;cursor:pointer;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;}
-.blk:hover:not(:disabled){border-color:transparent;border-bottom-color:var(--c);background:var(--bg-2);}
-.blk:focus-visible{outline:2px solid var(--accent-2);outline-offset:1px;}
-.blk-tag{font-size:10px;color:var(--c);margin-right:5px;vertical-align:super;}
+/* ---------------- TEXTO CONTÍNUO ---------------- */
+#texto{max-width:78ch;margin:0 auto;padding:22px 20px 40vh;}
+.par{margin:0 0 1.35em;font-size:15.5px;line-height:1.95;}
 
-/* editor da etapa atual */
-.ed{margin:10px 0;padding:10px 12px;border:1px solid var(--c);border-left-width:5px;border-radius:4px;background:var(--cb);}
-.ed-nome{font-size:12px;color:var(--c);margin-bottom:6px;}
-.ed-ta{display:block;width:100%;box-sizing:border-box;resize:none;overflow:hidden;min-height:72px;padding:6px 0;
-  border:0;outline:0;background:transparent;color:var(--fg);font:inherit;font-size:15px;line-height:1.7;}
-.ed-ta::placeholder{color:var(--fg-dim);opacity:.8;}
-.ed:focus-within{box-shadow:0 0 0 1px var(--c);}
-.ed-info{margin-top:4px;font-size:11px;color:var(--fg-dim);}
+/* cada etapa é um trecho grifado dentro do texto, sem caixa/bloco */
+.st{--h:210;display:inline;padding:1px 0;border-radius:2px;color:var(--fg);
+  background:linear-gradient(180deg,transparent 52%,hsla(var(--h),70%,50%,.22) 52%);
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+  transition:opacity .18s ease,background .18s ease,font-size .16s ease;}
+.st.concluida{cursor:pointer;}
+.st.editando{outline:none;cursor:text;}
+.st.rascunho{border-bottom:1px dashed hsla(var(--h),70%,60%,.75);}
+.st.pendente{border-bottom:1px dashed var(--warn);}
+.st:focus{outline:none;}
+.st:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:3px;}
+.st:empty::before{content:attr(data-placeholder);color:var(--fg-dim);font-style:italic;opacity:.9;}
+
+/* foco: o trecho trabalhado cresce e os demais ficam levemente transparentes */
+#texto.tem-foco .st:not(.foco){opacity:.58;}
+#texto.tem-foco .st.foco{font-size:1.06em;
+  background:linear-gradient(180deg,transparent 48%,hsla(var(--h),75%,55%,.34) 48%);}
+@media (hover:hover){
+  .st.concluida:hover{background:linear-gradient(180deg,transparent 52%,hsla(var(--h),75%,55%,.32) 52%);}
+}
+
 .fim{margin:16px 0;padding:10px 12px;border:1px dashed var(--accent);border-radius:4px;color:var(--accent);font-size:13px;}
 
-/* painel */
-#editor-opts{flex:0 1 52%;overflow-y:auto;padding:8px 10px;}
-#console-output{flex:1 1 auto;white-space:normal;color:var(--fg);}
+/* ---------------- PLANO (FORMULÁRIO) ---------------- */
+#plano-view{position:absolute;inset:0;overflow:auto;background:var(--bg-0);overscroll-behavior:contain;}
+#plano-form{max-width:78ch;margin:0 auto;padding:22px 20px 40vh;}
+#plano-form h2{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--accent);}
+#plano-intro{margin:0 0 20px;font-size:13px;line-height:1.65;color:var(--fg-dim);}
+#plano-campos{display:flex;flex-direction:column;gap:16px;}
+.plano-campo label{display:block;margin:0 0 3px;font-size:12px;font-weight:700;color:var(--fg);}
+.plano-dica{margin:0 0 6px;font-size:11.5px;line-height:1.55;color:var(--fg-dim);}
+.plano-campo textarea{display:block;width:100%;min-height:64px;box-sizing:border-box;resize:vertical;
+  padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg-1);color:var(--fg);
+  font:inherit;font-size:14px;line-height:1.6;}
+.plano-campo textarea::placeholder{color:var(--fg-dim);opacity:.75;}
+.plano-campo textarea:focus{outline:none;border-color:var(--accent-2);}
+#plano-acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
+#planoConcluir{color:var(--accent);border-color:#245c46;}
+#planoVoltar{color:var(--fg-dim);}
+
+/* ---------------- PAINEL: PLANO, ESTRUTURA E GUIA ---------------- */
+#plano-resumo{flex:0 1 auto;min-height:0;max-height:34%;display:flex;flex-direction:column;
+  border-bottom:1px solid var(--line);background:var(--bg-1);}
+#plano-resumo-head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:5px 12px;font-size:11px;color:var(--fg-dim);border-bottom:1px solid var(--line);background:var(--bg-2);}
+#togglePlano{padding:2px 8px;font-size:11px;line-height:1.2;}
+#plano-resumo-corpo{flex:1 1 auto;min-height:0;overflow:auto;padding:8px 12px;font-size:12px;line-height:1.5;}
+.plano-resumo-lista{display:grid;grid-template-columns:auto 1fr;gap:3px 8px;margin:0;}
+.plano-resumo-lista dt{color:var(--fg-dim);white-space:normal;overflow-wrap:anywhere;}
+.plano-resumo-lista dd{margin:0;color:var(--fg);white-space:pre-wrap;overflow-wrap:anywhere;}
+.plano-resumo-vazio{margin:0 0 8px;color:var(--fg-dim);}
+.editar-plano{width:100%;margin-top:8px;padding:4px 8px;font-size:11.5px;}
+
+#editor-opts{display:block;flex:1 1 38%;min-height:90px;overflow-y:auto;padding:8px 10px;}
+#console-output{flex:1 1 auto;min-height:90px;white-space:normal;color:var(--fg);}
 .prog{margin-bottom:8px;}
 .prog-n{font-size:11.5px;color:var(--fg-dim);}
 .prog-barra{height:4px;margin-top:4px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
 .prog-enche{height:100%;background:var(--accent);}
 .grp{margin:10px 0 4px;font-size:11px;color:var(--fg-dim);}
-.et{display:flex;align-items:center;gap:8px;width:100%;margin:2px 0;padding:5px 8px;text-align:left;
-  border-color:var(--line);border-left:3px solid var(--c);font-size:12px;}
+#editor-opts .et{display:flex;align-items:center;gap:8px;width:100%;margin:2px 0;padding:5px 8px;text-align:left;
+  border-color:var(--line);border-left:3px solid var(--c,var(--line));font-size:12px;}
 .et-m{flex:0 0 auto;width:1.2em;text-align:center;color:var(--fg-dim);}
 .et.feita .et-m{color:var(--accent);}
-.et.atual{border-color:var(--accent-2);border-left-color:var(--c);color:var(--accent-2);}
+.et.atual{border-color:var(--accent-2);border-left-color:var(--c,var(--accent-2));color:var(--accent-2);}
 .et.atual .et-m{color:var(--accent-2);}
+.et-plano{border-left-color:var(--accent);}
+.et-plano .et-m,.et-plano.feita .et-m{color:var(--accent);}
+@media (hover:hover){
+  #editor-opts .et:hover:not(:disabled){border-color:var(--accent-2);border-left-color:var(--c,var(--accent));}
+}
 .g-titulo{font-size:13px;font-weight:700;margin-bottom:4px;}
 .g-k{margin-top:8px;font-size:11px;color:var(--fg-dim);}
 .g-v{font-size:12.5px;line-height:1.55;}
 .g-ex{margin-top:2px;padding:4px 8px;border-left:2px solid var(--line);font-size:12.5px;line-height:1.55;color:var(--fg-dim);font-style:italic;}
+.g-conectivo{margin-top:10px;padding:6px 8px;border-left:2px solid var(--accent-2);border-radius:4px;background:var(--bg-2);}
+.g-conectivo .g-k{margin-top:0;}
+.g-conectivo-principal{margin-top:2px;font-size:13px;font-weight:700;color:var(--accent-2);}
+.g-conectivo-alt{margin-top:3px;font-size:11px;color:var(--fg-dim);}
 
-/* prompt */
+/* ---------------- PROMPT ---------------- */
 #prompt-view{position:absolute;inset:0;display:flex;flex-direction:column;}
 #prompt-view[hidden]{display:none;}
 #prompt-bar{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg-1);}
@@ -53,9 +96,25 @@
 #status-msg.ok{color:var(--accent);}
 #status-msg.warn{color:var(--warn);}
 
+/* ---------------- MODO VERTICAL ---------------- */
 @media (max-width:640px),(orientation:portrait) and (max-width:860px){
-  #texto{padding:12px 12px 40vh;}
-  .et{min-height:44px;}
+  #texto{padding:14px 14px 40vh;}
+  .par{font-size:15px;line-height:2.05;}
+  .st{padding:3px 0;}
+  #editor-opts .et{min-height:44px;}
   #prompt-bar button{min-height:44px;}
+  #plano-form{padding:16px 14px 40vh;}
+  .plano-campo textarea{font-size:16px;}
+  #plano-acoes button{min-height:44px;}
+  #plano-resumo{max-height:26%;}
+  #plano-resumo-head{min-height:44px;}
+  #editor-header{padding:4px 10px;}
+  #editor-header button{min-width:44px;min-height:44px;}
+  #editor-opts,#console-output{min-height:56px;}
+  #togglePlano{min-width:44px;min-height:44px;}
+  .editar-plano{min-height:44px;}
 }
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;}}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;}
+  .st{transition:none!important;}
+}
