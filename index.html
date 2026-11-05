@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Majorama.redação — escreva a redação etapa por etapa</title>
+<meta name="description" content="Escreva a redação dissertativo-argumentativa seguindo uma estrutura fixa, bloco por bloco, e gere um prompt estruturado para qualquer LLM corrigir." />
+<link rel="stylesheet" href="vendor/majorama-ui/majorama-ui.css" />
+<link rel="stylesheet" href="app.css" />
+</head>
+<body>
+
+  <header id="topbar">
+    <div id="brand">
+      <span class="brand-glyph">▓▒░</span>
+      <h1>MAJORAMA<span class="dim">.redação // Estrutura por etapas</span></h1>
+    </div>
+
+    <div id="controls">
+      <button id="acaoBtn" title="Concluir a etapa atual (Ctrl+Enter)"><span class="ic">✓</span><span class="txt">Concluir</span></button>
+      <button id="promptBtn" title="Ver e copiar o prompt de correção"><span class="ic">❯</span><span class="txt">Prompt</span></button>
+      <button id="bY" aria-pressed="true" title="Abrir/fechar o painel lateral"><span class="ic">▤</span><span class="txt">Painel</span></button>
+      <button id="helpBtn" title="Tutorial guiado"><span class="ic">?</span><span class="txt">Ajuda</span></button>
+    </div>
+  </header>
+
+  <main id="workspace">
+    <section id="terminal-pane" aria-label="Texto da redação">
+      <div id="terminal-container">
+        <div id="texto"></div>
+        <div id="prompt-view" hidden>
+          <div id="prompt-bar">
+            <button id="voltarBtn">← Voltar ao texto</button>
+            <button id="copiarBtn">Copiar prompt</button>
+            <button id="limparBtn" class="perigo" title="Apaga a redação salva neste navegador">Apagar redação</button>
+          </div>
+          <textarea id="prompt-out" readonly spellcheck="false" aria-label="Prompt gerado"></textarea>
+        </div>
+      </div>
+      <div id="status-bar"><span id="status-msg">Pronto.</span><span id="engine-mode">Majorama.redação</span></div>
+    </section>
+
+    <div id="splitter" role="separator" aria-orientation="vertical" aria-label="Redimensionar o painel lateral" tabindex="0"></div>
+
+    <aside id="editor-pane" aria-label="Estrutura e guia da etapa">
+      <div id="editor-header">
+        <span>estrutura</span>
+        <span class="acoes">
+          <button id="maxEditor" title="Maximizar/restaurar" aria-label="Maximizar" aria-pressed="false">⤢</button>
+          <button id="closeEditor" title="Fechar o painel" aria-label="Fechar o painel">✕</button>
+        </span>
+      </div>
+      <div id="editor-opts"></div>
+      <div id="console-header">guia da etapa</div>
+      <div id="console-output" role="log" aria-live="polite"></div>
+    </aside>
+  </main>
+
+  <footer id="footer">
+    <span>Majorama.redação — estrutura fixa para a redação dissertativo-argumentativa. Tudo roda localmente no seu navegador.</span>
+    <span>
+      <a href="https://github.com/Obentemiller/majorama-redacao/blob/main/manual.md" target="_blank" rel="noopener noreferrer">Manual</a>
+      <a href="https://github.com/Obentemiller/majorama-redacao" target="_blank" rel="noopener noreferrer">Github/Obentemiller</a>
+    </span>
+  </footer>
+
+  <div id="tour" hidden>
+    <div id="tour-hl"></div>
+    <div id="tour-card" role="dialog" aria-modal="true" aria-labelledby="tourTitulo">
+      <button id="tourSair" aria-label="Sair do tutorial" title="Sair (Esc)">✕</button>
+      <h2 id="tourTitulo"></h2>
+      <p id="tourTexto"></p>
+      <a id="tourLink" class="btn" target="_blank" rel="noopener noreferrer" hidden></a>
+      <div class="nav">
+        <span class="pos" id="tourPos"></span>
+        <button id="tourPrev">← Anterior</button>
+        <button id="tourNext">Próximo →</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="vendor/majorama-ui/majorama-ui.js"></script>
+  <script src="etapas.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+import {JSDOM} from 'jsdom';import fs from 'fs';
+const html=fs.readFileSync('index.html','utf8').replace(/<script src="([^"]+)"><\/script>/g,(_,s)=>'<script>'+fs.readFileSync(s,'utf8')+'</script>');
+const erros=[];
+const dom=new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:'http://localhost/',
+  beforeParse(w){w.addEventListener('error',e=>erros.push(e.message));w.matchMedia=w.matchMedia||(()=>({matches:false,addEventListener(){},addListener(){}}));w.HTMLElement.prototype.scrollIntoView=()=>{};}});
+const d=dom.window.document,w=dom.window;
+const ok=(c,m)=>{if(!c){console.error('FALHA:',m);process.exitCode=1;}else console.log('ok:',m);};
+const digita=(v)=>{const t=d.querySelector('.ed-ta');t.value=v;t.dispatchEvent(new w.Event('input'));t.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Enter',ctrlKey:true,bubbles:true}));};
+ok(d.querySelector('.ed-ta'),'editor da primeira etapa');
+d.getElementById('acaoBtn').click();
+ok(d.getElementById('status-msg').className==='warn','vazio não conclui');
+digita('Repertório um.');
+ok(d.querySelectorAll('.blk').length===1,'bloco concluído renderizado');
+ok(d.querySelector('.ed-nome').textContent.includes('Conectivo'),'avança para a etapa 2');
+for(let i=1;i<13;i++)digita('Texto '+i+'.');
+ok(d.querySelectorAll('.blk').length===13&&d.querySelector('.fim'),'13 blocos e aviso de fim');
+d.querySelector('.blk').click();
+ok(d.querySelector('.ed-ta').value==='Repertório um.','reedição de bloco');
+digita('Repertório novo.');
+ok(d.querySelector('.blk').textContent.includes('Repertório novo.'),'edição salva');
+d.getElementById('promptBtn').click();
+const p=d.getElementById('prompt-out').value;
+ok(p.includes('@R1I@\nRepertório novo.\n@R1F@')&&p.includes('@PIF@')&&p.includes('LEPER PRO')&&p.includes('Esperado:'),'prompt com marcadores, algoritmo e esperado');
+d.getElementById('limparBtn').click;
+d.getElementById('helpBtn').click();
+ok(!d.getElementById('tour').hidden,'tutorial abre');
+ok(erros.length===0,'sem erros: '+erros.join('|'));
